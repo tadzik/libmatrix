@@ -8,7 +8,7 @@ INCLUDEPATH += .
 QMAKE_CXXFLAGS += -std=c++11
 
 # Input
-SOURCES += Client.cpp libmatrix.cpp
+SOURCES += Client.cpp Client_requests.cpp Client_slots.cpp libmatrix.cpp
 HEADERS += Client.hpp
 
 QT += widgets network
