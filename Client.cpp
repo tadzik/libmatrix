@@ -4,6 +4,7 @@ Client::Client(const char *host, int port, QObject *parent)
     : QObject(parent)
 {
     nam = new QNetworkAccessManager(this);
+    presenceTracker = new PresenceTracker(this);
     synapseHostname = host;
     endpoint = "http://" + synapseHostname + ":" + QString::number(port)
                + "/_matrix/client/api/v1/";
@@ -42,6 +43,13 @@ void Client::doPresenceList()
 {
     QNetworkReply *rep = 0;
     rep = nam->get(request_presenceList());
-    connect(rep, SIGNAL(finished()), this, SLOT(onPresenceList()));
+    connect(rep, SIGNAL(finished()),
+            presenceTracker, SLOT(onPresenceList()));
 }
 
+void Client::waitForEvents(QString *since)
+{
+    QNetworkReply *rep = 0;
+    rep = nam->get(request_events(since));
+    connect(rep, SIGNAL(finished()), this, SLOT(onEvents()));
+}

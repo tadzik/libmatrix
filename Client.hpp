@@ -6,9 +6,14 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QObject>
+
+#include "PresenceTracker.hpp"
 
 class Client : public QObject {
 Q_OBJECT;
+    PresenceTracker *presenceTracker;
+
     QNetworkAccessManager *nam;
     QString endpoint;
     QString username;
@@ -21,16 +26,19 @@ Q_OBJECT;
     QNetworkRequest request_subscribe();
     QNetworkRequest request_initialSync();
     QNetworkRequest request_presenceList();
+    QNetworkRequest request_events(QString *since = nullptr);
 
     void doInitialSync();
     void doPresenceList();
+
+    void waitForEvents(QString *since = nullptr);
 
 private slots:
     void onGetLogin();
     void onPostLogin();
     void onInitialSync();
-    void onPresenceList();
     void onSubscribe();
+    void onEvents();
 
 public:
     Client(const char *, int, QObject *parent = 0);
